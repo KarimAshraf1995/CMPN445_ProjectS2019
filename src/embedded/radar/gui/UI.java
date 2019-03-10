@@ -12,8 +12,6 @@ import javax.sound.midi.Instrument;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.sun.prism.j2d.paint.MultipleGradientPaint.ColorSpaceType;
-
 import static java.lang.Math.*;
 
 /**
@@ -30,7 +28,7 @@ public class UI {
     private int cw, ch;
 
     private static UI singleton = null;
-    private final float strokeWidth = 1;
+    private final float strokeWidth = 2;
     private final int bgColor = 32;
     private final Color radarColor = new Color(98, 245, 31);
     private final int divisons = 4;
@@ -83,52 +81,48 @@ public class UI {
      * 
      */
     public void DrawScreen(int scanDegree, boolean dir) {
-        while (true) {
-            cw = window.getWidth();
-            ch = window.getHeight();
-            int centerX = cw / 2;
-            int centerY = ch;
-            int radius = cw / 2 - 50;
+        cw = window.getWidth();
+        ch = window.getHeight();
+        int centerX = cw / 2;
+        int centerY = ch;
+        int radius = cw / 2 - 50;
 
-            img = window.createVolatileImage(cw, ch);
-            g = (Graphics2D) img.getGraphics();
-            g.setColor(new Color(bgColor, bgColor, bgColor));
-            g.fillRect(0, 0, img.getWidth(null), img.getHeight(null));
-            
-            int dirf = dir ? 1 : -1;
-            
-            double R=radarColor.getRed();
-            double G=radarColor.getGreen();
-            double B=radarColor.getBlue();
+        img = window.createVolatileImage(cw, ch);
+        g = (Graphics2D) img.getGraphics();
+        g.setColor(new Color(bgColor, bgColor, bgColor));
+        g.fillRect(0, 0, img.getWidth(null), img.getHeight(null));
 
-            for (int i=0;i<40;i++){
-                int d = scanDegree + i * dirf;
+        int dirf = dir ? 1 : -1;
 
-                if(d<0 || d>180)
-                    break;
-                
-                g.setColor(new Color((int)R,(int)G,(int)B));
-                g.drawLine(centerX, centerY, centerX - (int) round(radius * cos(d * PI / 180)),
-                        centerY - (int) round(radius * sin(d * PI / 180)));
-                
-               
-                R = R - decayf*R/(R+G+B);
-                G = G - decayf*G/(R+G+B);
-                B = B - decayf*B/(R+G+B);
-            }
+        double R = radarColor.getRed();
+        double G = radarColor.getGreen();
+        double B = radarColor.getBlue();
 
-            g.setColor(radarColor);
-            g.setStroke(new BasicStroke(strokeWidth));
+        for (int i = 0; i < 40; i++) {
+            int d = scanDegree + i * dirf;
 
-            for (int r = radius / divisons; r < radius; r += radius / divisons) {
-                g.drawArc(centerX - r, centerY - r, 2 * r, 2 * r, 0, 180);
-            }
+            if (d < 0 || d > 180)
+                break;
 
-            windowgfx.setColor(Color.BLACK);
-            windowgfx.drawImage(img, 0, 0, null);
+            g.setColor(new Color((int) R, (int) G, (int) B));
+            g.drawLine(centerX, centerY, centerX - (int) round(radius * cos(d * PI / 180)),
+                    centerY - (int) round(radius * sin(d * PI / 180)));
 
-            return;
+            R = R - decayf * R / (R + G + B);
+            G = G - decayf * G / (R + G + B);
+            B = B - decayf * B / (R + G + B);
         }
+
+        g.setColor(radarColor);
+        g.setStroke(new BasicStroke(strokeWidth));
+
+        for (int r = radius / divisons; r < radius; r += radius / divisons) {
+            g.drawArc(centerX - r, centerY - r, 2 * r, 2 * r, 0, 180);
+        }
+
+        windowgfx.setColor(Color.BLACK);
+        windowgfx.drawImage(img, 0, 0, null);
+
     }
 
     public void DrawScreenElement() {
