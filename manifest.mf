@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
 Created-By: 1.8.0_181 (Oracle Corporation)
 Main-Class: embedded.radar.RadarApp
+Class-Path: jSerialComm-2.4.2.jar

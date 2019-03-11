@@ -26,6 +26,7 @@ public class UI {
     private Graphics2D g;
     private Graphics windowgfx;
     private int cw, ch;
+    private int centerX,centerY,radius;
 
     private static UI singleton = null;
     private final float strokeWidth = 2;
@@ -65,7 +66,7 @@ public class UI {
     }
 
     /**
-     * (Re)Draws radar background with no indication current scan angle
+     * (Re)Draws radar background with no indication for current scan angle
      */
     public void DrawScreen() {
         DrawScreen(0, false);
@@ -83,9 +84,9 @@ public class UI {
     public void DrawScreen(int scanDegree, boolean dir) {
         cw = window.getWidth();
         ch = window.getHeight();
-        int centerX = cw / 2;
-        int centerY = ch;
-        int radius = cw / 2 - 50;
+        centerX = cw / 2;
+        centerY = ch;
+        radius = cw / 2 - 50;
 
         img = window.createVolatileImage(cw, ch);
         g = (Graphics2D) img.getGraphics();

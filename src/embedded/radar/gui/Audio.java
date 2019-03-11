@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 public class Audio {
 
     private static Audio singleton = null;
-    private static MidiChannel chan;
+    private MidiChannel chan;
 
     /**
      * 

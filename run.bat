@@ -1,1 +1,1 @@
-java -jar build/RadarApp.jar
+java -jar build/RadarApp.jar 
