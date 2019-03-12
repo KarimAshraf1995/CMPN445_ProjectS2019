@@ -118,25 +118,26 @@ public class Serial extends Communicator {
     @Override
     public Reading read() {
         int len = serial.readBytes(ReadBuffer, 50);
-        Reading r = new Reading();
+
         // degree,reading,dir
         String[] vals = new String(ReadBuffer, 0, len, StandardCharsets.US_ASCII).split(",");
 
-        r.degree = Integer.parseInt(vals[0]);
-        r.value = Integer.parseInt(vals[1]);
-        r.dir = (Integer.parseInt(vals[2]) == 1);
+        int degree = Integer.parseInt(vals[0]);
+        int value = Integer.parseInt(vals[1]);
+        boolean dir = (Integer.parseInt(vals[2]) == 1);
 
-        return r;
+        return new Reading(degree, value, dir);
     }
 
     /**
      * 
      * Closes the open serial port
      * 
-     *  @return <code>true</code> if success, <code>false</code> if there was an error.
+     * @return <code>true</code> if success, <code>false</code> if there was an
+     *         error.
      */
     @Override
-    public boolean disconnect(){
+    public boolean disconnect() {
         return serial.closePort();
     }
 }

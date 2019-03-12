@@ -4,7 +4,6 @@ import embedded.radar.Reading;
 
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
 import java.io.*;
 
 /**
@@ -96,15 +95,14 @@ public class TCP extends Communicator {
             return null;
         }
 
-        Reading r = new Reading();
         // degree,reading,dir
         String[] vals = new String(ReadBuffer, 0, len, StandardCharsets.US_ASCII).split(",");
 
-        r.degree = Integer.parseInt(vals[0]);
-        r.value = Integer.parseInt(vals[1]);
-        r.dir = (Integer.parseInt(vals[2]) == 1);
+        int degree = Integer.parseInt(vals[0]);
+        int value = Integer.parseInt(vals[1]);
+        boolean dir = (Integer.parseInt(vals[2]) == 1);
 
-        return r;
+        return new Reading(degree, value, dir);
     }
 
     /**
