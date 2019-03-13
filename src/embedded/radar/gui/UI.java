@@ -1,22 +1,14 @@
 package embedded.radar.gui;
 
 import java.util.*;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-
-import java.awt.BasicStroke;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
-import javax.sound.midi.Instrument;
-import javax.swing.JFrame;
+import java.awt.*;
+import javax.swing.*;
 import javax.swing.JOptionPane;
+import javax.sound.midi.Instrument;
+import static java.lang.Math.*;
 
 import embedded.radar.Reading;
 
-import static java.lang.Math.*;
 
 /**
  * Class responsible for drawing the GUI
@@ -33,6 +25,7 @@ public class UI {
     private int centerX, centerY, radius;
 
     private static UI singleton = null;
+    private static Font font = new Font("Lucida Console", Font.PLAIN, 17);
     private static final float strokeWidth = 2;
     private static final float scanWidth = 7;
     private static final int bgColor = 32;
@@ -75,7 +68,17 @@ public class UI {
      * (Re)Draws radar background with no indication for current scan angle
      */
     public void DrawScreen() {
-        DrawScreen(0, false, null);
+        DrawScreen(0, false, null, "");
+    }
+
+    /**
+     * (Re)Draws radar background with no indication for current scan angle display
+     * a message
+     * 
+     * @param message message to be displayed
+     */
+    public void DrawScreen(String message) {
+        DrawScreen(0, false, null, message);
     }
 
     /**
@@ -89,7 +92,7 @@ public class UI {
      * @param objects    Radar readings
      * 
      */
-    public void DrawScreen(int scanDegree, boolean dir, List<Reading> objects) {
+    public void DrawScreen(int scanDegree, boolean dir, java.util.List<Reading> objects, String message) {
         cw = window.getWidth();
         ch = window.getHeight();
         centerX = cw / 2;
@@ -144,9 +147,15 @@ public class UI {
 
             a = a / 1.1f;
         }
+        
+        /* Print message */
+        g.setColor(radarColor);
+        g.setFont(font);
+        g.drawString(message, 50, 50);
+        
 
         // Apply frame
-        windowgfx.setColor(Color.BLACK);
+        //windowgfx.setColor(Color.BLACK);
         windowgfx.drawImage(img, 0, 0, null);
 
     }
