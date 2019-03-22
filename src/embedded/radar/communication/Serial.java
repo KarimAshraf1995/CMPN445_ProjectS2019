@@ -140,4 +140,11 @@ public class Serial extends Communicator {
     public boolean disconnect() {
         return serial.closePort();
     }
+
+
+    @Override
+    public boolean isConnected()
+    {
+        return serial.isOpen();
+    }
 }

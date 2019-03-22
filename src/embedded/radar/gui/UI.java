@@ -9,7 +9,6 @@ import static java.lang.Math.*;
 
 import embedded.radar.Reading;
 
-
 /**
  * Class responsible for drawing the GUI
  * 
@@ -25,12 +24,13 @@ public class UI {
     private int centerX, centerY, radius;
 
     private static UI singleton = null;
-    private static Font font = new Font("Lucida Console", Font.PLAIN, 17);
+    // private static Font font = new Font("Lucida Console", Font.PLAIN, 17);
+    private static Font font = new Font("Courier", Font.PLAIN, 17);
     private static final float strokeWidth = 2;
     private static final float scanWidth = 7;
     private static final int bgColor = 32;
     private static final Color radarColor = new Color(98, 245, 31);
-    private static final Color ObjectColor = new Color(255, 10, 10);
+    private static final Color ObjectColor = new Color(142, 247, 94);
     private static final int divisons = 4;
     private static final int decayf = 8;
 
@@ -68,17 +68,7 @@ public class UI {
      * (Re)Draws radar background with no indication for current scan angle
      */
     public void DrawScreen() {
-        DrawScreen(0, false, null, "");
-    }
-
-    /**
-     * (Re)Draws radar background with no indication for current scan angle display
-     * a message
-     * 
-     * @param message message to be displayed
-     */
-    public void DrawScreen(String message) {
-        DrawScreen(0, false, null, message);
+        DrawScreen(0, false, null);
     }
 
     /**
@@ -92,7 +82,7 @@ public class UI {
      * @param objects    Radar readings
      * 
      */
-    public void DrawScreen(int scanDegree, boolean dir, java.util.List<Reading> objects, String message) {
+    public void DrawScreen(int scanDegree, boolean dir, java.util.List<Reading> objects) {
         cw = window.getWidth();
         ch = window.getHeight();
         centerX = cw / 2;
@@ -116,13 +106,26 @@ public class UI {
         /* Draw objects */
         g.setColor(ObjectColor);
         g.setStroke(new BasicStroke(scanWidth));
+        int last_val = 0;
+        int last_x = -1, last_y = -1, xx, yy;
         if (objects != null) {
             for (Reading r : objects) {
-                int dist = r.value;
-                g.drawLine(centerX - (int) round(dist * cos(r.degree * PI / 180)),
-                        centerY - (int) round(dist * sin(r.degree * PI / 180)),
-                        centerX - (int) round(radius * cos(r.degree * PI / 180)),
-                        centerY - (int) round(radius * sin(r.degree * PI / 180)));
+                float dist = radius * (1 - ((float) r.value) / 400.0f);
+
+                if (Math.abs(last_val - r.value) < 20) {
+                    xx = centerX - (int) round(dist * cos(r.degree * PI / 180));
+                    yy = centerY - (int) round(dist * sin(r.degree * PI / 180));
+                    if (last_x != -1 && last_y != -1) {
+                        g.drawLine(xx, yy, last_x, last_y);
+                    }
+                    last_x = xx;
+                    last_y = yy;
+                }
+                else{
+                    last_x = -1;
+                    last_y = -1;
+                }
+                last_val = r.value;
             }
         }
 
@@ -147,15 +150,19 @@ public class UI {
 
             a = a / 1.1f;
         }
-        
-        /* Print message */
+
+        /* Print message(s) */
         g.setColor(radarColor);
         g.setFont(font);
-        g.drawString(message, 50, 50);
-        
+        String message;
+        int y = 50;
+        while ((message = Logger.next()) != null) {
+            g.drawString(message, 50, y);
+            y = y + 20;
+        }
 
         // Apply frame
-        //windowgfx.setColor(Color.BLACK);
+        // windowgfx.setColor(Color.BLACK);
         windowgfx.drawImage(img, 0, 0, null);
 
     }

@@ -1,6 +1,7 @@
 package embedded.radar.communication;
 
 import embedded.radar.Reading;
+import embedded.radar.gui.Logger;
 
 import java.net.*;
 import java.nio.charset.StandardCharsets;
@@ -62,17 +63,15 @@ public class TCP extends Communicator {
             client = new Socket(host, port);
             out = new DataOutputStream(client.getOutputStream());
             in = new DataInputStream(client.getInputStream());
-            out.write(startbytes);
-            in.read(ReadBuffer);
-
-            if (ReadBuffer[0] != ackbytes[0] || ReadBuffer[1] != ackbytes[1] || ReadBuffer[2] != ackbytes[2]
-                    || ReadBuffer[3] != ackbytes[3]) {
-                disconnect();
-                return false;
-            }
-        } catch (UnknownHostException e) {
-            return false;
+            // out.write(startbytes);
+            // in.read(ReadBuffer);
+            /*
+             * if (ReadBuffer[0] != ackbytes[0] || ReadBuffer[1] != ackbytes[1] ||
+             * ReadBuffer[2] != ackbytes[2] || ReadBuffer[3] != ackbytes[3]) { disconnect();
+             * return false; }
+             */
         } catch (IOException e) {
+            Logger.log("Connection failed: " + e.getMessage());
             return false;
         }
         return true;
@@ -92,6 +91,7 @@ public class TCP extends Communicator {
         try {
             len = in.read(ReadBuffer);
         } catch (IOException e) {
+            Logger.log("Something went wrong: " + e.getMessage());
             return null;
         }
 
@@ -131,5 +131,13 @@ public class TCP extends Communicator {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean isConnected() {
+        if (client != null) {
+            return client.isConnected();
+        }
+        return false;
     }
 }

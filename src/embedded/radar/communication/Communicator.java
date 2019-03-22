@@ -19,5 +19,6 @@ public abstract class Communicator {
     public abstract boolean connect();
     public abstract Reading read();
     public abstract boolean disconnect();
+    public abstract boolean isConnected();
 
 }
