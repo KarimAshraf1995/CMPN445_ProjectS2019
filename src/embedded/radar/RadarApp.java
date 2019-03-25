@@ -17,23 +17,29 @@ public class RadarApp {
         Audio sound = Audio.getInstance();
         List<Reading> list = new LinkedList<Reading>();
 
-        Communicator comm = TCP.getInstance("192.168.1.5",2019);
+        //TODO: Implement a method to get ip automatically
+        Communicator comm = TCP.getInstance("192.168.1.6", 2019);
 
         Logger.log("Connecting..");
         gui.DrawScreen();
-        
+
         comm.connect();
-        
+
         if (!comm.isConnected()) {
             return;
         }
         while (true) {
             Reading last = comm.read();
-            Logger.log("Value of " + last.value + ", at angle " + last.degree + " detected!");
-            if(last.degree==180 || last.degree==0){
-                list.clear();
+            if (comm.isConnected() && last!=null) {
+                Logger.log("Value of " + last.value + ", at angle " + last.degree + " detected!");
+                if (last.degree == 180 || last.degree == 0) {
+                    list.clear();
+                }
+                list.add(comm.read());
             }
-            list.add(comm.read());
+            else{
+                Logger.log("Connection lost!");
+            }
             gui.DrawScreen(last.degree, last.dir, list);
         }
 

@@ -87,21 +87,6 @@ public class Serial extends Communicator {
         serial.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
         serial.setBaudRate(baudrate);
 
-        // Send start
-        serial.writeBytes(startbytes, startbytes.length);
-
-        // Wait for ack
-        if (serial.readBytes(ReadBuffer, 4) <= 0) {
-            serial.closePort();
-            return false;
-        }
-
-        if (ReadBuffer[0] != ackbytes[0] || ReadBuffer[1] != ackbytes[1] || ReadBuffer[2] != ackbytes[2]
-                || ReadBuffer[3] != ackbytes[3]) {
-            serial.closePort();
-            return false;
-        }
-
         serial.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0);
 
         return true;

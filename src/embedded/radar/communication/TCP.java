@@ -61,15 +61,9 @@ public class TCP extends Communicator {
     public boolean connect() {
         try {
             client = new Socket(host, port);
+            client.setTcpNoDelay(false);
             out = new DataOutputStream(client.getOutputStream());
             in = new DataInputStream(client.getInputStream());
-            // out.write(startbytes);
-            // in.read(ReadBuffer);
-            /*
-             * if (ReadBuffer[0] != ackbytes[0] || ReadBuffer[1] != ackbytes[1] ||
-             * ReadBuffer[2] != ackbytes[2] || ReadBuffer[3] != ackbytes[3]) { disconnect();
-             * return false; }
-             */
         } catch (IOException e) {
             Logger.log("Connection failed: " + e.getMessage());
             return false;
@@ -90,6 +84,10 @@ public class TCP extends Communicator {
         int len;
         try {
             len = in.read(ReadBuffer);
+            if(len==-1){
+                Logger.log("Connection lost!");
+                return null;
+            }
         } catch (IOException e) {
             Logger.log("Something went wrong: " + e.getMessage());
             return null;
