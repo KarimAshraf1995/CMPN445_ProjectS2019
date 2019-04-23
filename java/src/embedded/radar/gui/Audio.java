@@ -58,6 +58,8 @@ public class Audio {
      * 
      */
     public void PlaySound() {
+        //chan.noteOn(90, 9);
+        
         try {
             new Thread() {
                 @Override
@@ -66,9 +68,8 @@ public class Audio {
                         for (int i = 0; i < 2; i++) {
                             chan.allNotesOff();
                             chan.noteOn(90, 90);
-                            Thread.sleep(1000);
+                            Thread.sleep(10);
                             chan.allNotesOff();
-                            Thread.sleep(500);
                         }
                     } catch (IllegalArgumentException e) {
                     } catch (InterruptedException e) {

@@ -42,7 +42,7 @@ void loop()
     }
     //Move to current angle position
     servo.write(angle);
-    delay(5); //wait for 5ms
+    delay(15); //wait for 5ms
     int value = analogRead(A0); //then read value
 
     //Send to the client

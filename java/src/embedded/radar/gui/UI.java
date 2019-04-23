@@ -5,6 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.JOptionPane;
 import javax.sound.midi.Instrument;
+import javax.sound.midi.MidiUnavailableException;
+
 import static java.lang.Math.*;
 
 import embedded.radar.Reading;
@@ -23,7 +25,9 @@ public class UI {
     private int cw, ch;
     private int centerX, centerY, radius;
 
+    private Audio sound;
     private static UI singleton = null;
+
     // private static Font font = new Font("Lucida Console", Font.PLAIN, 17);
     private static Font font = new Font("Courier", Font.PLAIN, 17);
     private static final float strokeWidth = 2;
@@ -33,6 +37,8 @@ public class UI {
     private static final Color ObjectColor = new Color(142, 247, 94);
     private static final int divisons = 4;
     private static final int decayf = 8;
+    
+    
 
     /**
      * 
@@ -62,6 +68,13 @@ public class UI {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setTitle("RadarApp");
         windowgfx = window.getGraphics();
+        try{
+            sound = Audio.getInstance();
+        } catch(MidiUnavailableException e){
+            sound = null;
+        }
+
+        
     }
 
     /**
@@ -107,23 +120,21 @@ public class UI {
         g.setColor(ObjectColor);
         g.setStroke(new BasicStroke(scanWidth));
         int last_val = 0;
-        int last_x = -1, last_y = -1, xx, yy;
+        int xx, yy;
         if (objects != null) {
             for (Reading r : objects) {
-                float dist = radius * (1 - ((float) r.value) / 400.0f);
 
-                if (Math.abs(last_val - r.value) < 20) {
+                float dist = radius * (1 - ((float) r.value-110) / 300.0f);
+
+                
+                if(r.value>100) {
                     xx = centerX - (int) round(dist * cos(r.degree * PI / 180));
                     yy = centerY - (int) round(dist * sin(r.degree * PI / 180));
-                    if (last_x != -1 && last_y != -1) {
-                        g.drawLine(xx, yy, last_x, last_y);
+                    g.drawRect(xx, yy, 1, 1);
+                    
+                    if(abs(r.degree-scanDegree)==2){
+                        sound.PlaySound();
                     }
-                    last_x = xx;
-                    last_y = yy;
-                }
-                else{
-                    last_x = -1;
-                    last_y = -1;
                 }
                 last_val = r.value;
             }
