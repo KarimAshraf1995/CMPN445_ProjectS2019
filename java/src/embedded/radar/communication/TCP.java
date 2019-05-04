@@ -61,7 +61,7 @@ public class TCP extends Communicator {
     public boolean connect() {
         try {
             client = new Socket(host, port);
-            client.setTcpNoDelay(false);
+            client.setTcpNoDelay(true);
             out = new DataOutputStream(client.getOutputStream());
             in = new DataInputStream(client.getInputStream());
         } catch (IOException e) {
@@ -96,9 +96,9 @@ public class TCP extends Communicator {
         // degree,reading,dir
         String[] vals = new String(ReadBuffer, 0, len, StandardCharsets.US_ASCII).split(",");
 
-        int degree = Integer.parseInt(vals[0]);
+        int degree = 180 - Integer.parseInt(vals[0]);
         int value = Integer.parseInt(vals[1]);
-        boolean dir = (Integer.parseInt(vals[2]) == 1);
+        boolean dir = (Integer.parseInt(vals[2]) == 0);
 
         return new Reading(degree, value, dir);
     }

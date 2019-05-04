@@ -17,7 +17,7 @@ public class RadarApp {
         List<Reading> list = new LinkedList<Reading>();
 
         //TODO: Implement a method to get ip automatically
-        Communicator comm = TCP.getInstance("192.168.1.5", 2019);
+        Communicator comm = TCP.getInstance("192.168.1.4", 2019);
 
         Logger.log("Connecting..");
         gui.DrawScreen();

@@ -127,7 +127,7 @@ public class UI {
                 float dist = radius * (1 - ((float) r.value-110) / 300.0f);
 
                 
-                if(r.value>100) {
+                if(r.value>130){// && abs(last_val-r.value)>20) {
                     xx = centerX - (int) round(dist * cos(r.degree * PI / 180));
                     yy = centerY - (int) round(dist * sin(r.degree * PI / 180));
                     g.drawRect(xx, yy, 1, 1);

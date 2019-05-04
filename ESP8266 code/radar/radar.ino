@@ -5,14 +5,14 @@
 */
 
 #include <ESP8266WiFi.h>
-#include <Servo.h>
+#include "ServoDriver.h"
 #include "ConnectionServer.h"
 
-const char *ssid = "your_wifi_name";
-const char *password = "password";
+const char *ssid = "Karim-Zayed";
+const char *password = "01281412028";
 
 ConnectionServer conn(2019);
-Servo servo;
+ServoDriver servo;
 int angle = 0;
 int factor = 1;
 void setup()
